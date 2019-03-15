@@ -15,6 +15,8 @@
   
    一旦一个系统可以作为HMM被描述，就可以用来解决三个基本问题。其中前两个是模式识别的问题：给定HMM求一个观察序列的概率（评估）；
    搜索最有可能生成一个观察序列的隐藏状态序列（解码）。第三个问题是给定观察序列生成一个HMM（学习）。
+   
+   
    🌰：
    --------
    ```bash
@@ -30,5 +32,6 @@
    ![](https://github.com/ehamster/NLP/blob/master/images/Screenshot%202019-03-15%20at%2014.57.36.png)
    
    3.CRF 条件随即场  conditional random field
+   ------------------
    
    
