@@ -65,4 +65,8 @@
 而如果是拿一个词语的上下文作为输入，来预测这个词语本身，则是 『CBOW 模型』
 eg  CBOW根据上下文求中心词
 上下文的onehotencoding * w 就得到word2vec。  worc2vec * w‘ 得到中心词
+比如，在skipgram来说：
+  input: 1xV one hot encoding   假设一共V个词
+  hidern layer : VxN W  N远远小于V
+  output: 1XN * NxV W'  = 1XV
 ```
