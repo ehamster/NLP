@@ -56,7 +56,13 @@
    ```
 ![](https://github.com/ehamster/NLP/blob/master/images/Screenshot%202019-03-18%20at%2009.23.44.png)
 
+4.Word2Vec
+-----------------
+```bash
+他是word embedding的一种
 
-
-
-
+如果是用一个词语作为输入，来预测它周围的上下文，那这个模型叫做『Skip-gram 模型』
+而如果是拿一个词语的上下文作为输入，来预测这个词语本身，则是 『CBOW 模型』
+eg  CBOW根据上下文求中心词
+上下文的onehotencoding * w 就得到word2vec。  worc2vec * w‘ 得到中心词
+```
