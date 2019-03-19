@@ -113,7 +113,9 @@ word2vec有两种优化
 ========
 1。Hieraechical softmax
 ------------
+
 基于霍夫曼书，减少输出层计算量。计算量从v变成了logv
+
 2。Negative sampling
 -------
 比如我们有一个训练样本，中心词是w,它周围上下文共有2c个词，记为context(w)。由于这个中心词w,的确和context(w)相关存在，因此它是一个真实的正例。通过Negative Sampling采样，我们得到neg个和w不同的中心词wi,i=1,2,..neg，这样context(w)和wi就组成了neg个并不真实存在的负例。利用这一个正例和neg个负例，我们进行二元逻辑回归，得到负采样对应每个词wi对应的模型参数θi，和每个词的词向量。
