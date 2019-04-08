@@ -83,7 +83,25 @@
 
 4.Word2Vec
 -----------------
+
 ```bash
+相关概念
+--------------
+word Embedding:
+把单词或短语映射成实数向量
+One Hot encoding:
+最简单的word embedding，对于词A在他的位置置1，其他位置置0
+N-gram:
+基于假设第n个词的出现与前n-1个词相关。
+  作用：
+  1.计算ngram距离：
+  两个字符串s(begin A B C end)和t(begin A B end)
+  采用N=2的二元模型  s:(begin A) (A B) （B C） (C end)
+  t: (begin A) (A B) (B end)
+  distance = G(s) + G(t) - 2 G(s)&G(t) = 4 + 3 - 2（2） = 3
+  2.判断句子可能性
+  对于s p(s) = p(A|begin)p(B|A)p(C|B)p(end|C)
+  
 先将词变为onehot，比如一个 1* 10000的向量，然后和模型的参数矩阵10000*300相乘,就会得到 1*300的vector
 他是word embedding的一种
 一共两种：
@@ -131,3 +149,16 @@ word2vec应用场景
 1.找出某个词的相近词集合
 2.查看两个词相似程度
 3.找出几个词中不同类的词
+
+RNN and LSTM
+-----------
+
+![](https://github.com/ehamster/NLP/blob/master/images/Screenshot%202019-04-07%20at%2018.37.03.png)
+
+```bash
+相比RNN只有一个传递状态  h^t  ，LSTM有两个传输状态，一个  c^t （cell state），和一个  h^t （hidden state）。（Tips：RNN中的 h^t 对于LSTM中的 c^t ）
+
+其中对于传递下去的 c^t 改变得很慢，通常输出的 c^t 是上一个状态传过来的 c^{t-1} 加上一些数值。
+
+而 h^t 则在不同节点下往往会有很大的区别。
+```
