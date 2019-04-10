@@ -152,6 +152,30 @@ Skip-Gram模型和CBOW的思路是反着来的，即输入是特定的一个词�
 个人理解: 训练数据是一大堆的词对(cat,can) (can tree).  测试数据就是单个词 dog， 就会得到可能是dog上下文的词，
 取概率最高的几个就行了(训练数据窗口大小)
 ```
+
+```python
+#skip-gram实现思路
+#1.读取已经去除符号和分好词的数据
+with open('data/Javasplittedwords22',encoding = 'utf-8') as f:
+    text = f.read()
+#2.去除低频词
+words_count = Counter(words)
+words = [w for w in words if words_count[w] > 50]
+
+#3.构建所有词的int类型映射
+vocab = set(words)
+vocab_to_int = {w: c for c, w in enumerate(vocab)}
+
+#4.对原文本进行vocab到int的转换
+int_words = [vocab_to_int[w] for w in words]
+
+#5.去除停用词
+p = 1 - 根号（t / 频率） t = 1e-5
+
+#6.构建网络
+输入层 - embedding - negative sampling
+```
+
 word2vec有两种优化
 ========
 1。Hieraechical softmax
