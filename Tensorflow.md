@@ -84,8 +84,10 @@ variable可以改变
 用变量表示参数，因为validattion的时候不需要改变
 tf.get_variable(name，shape)
 图上出现一个v节点，但是会报错因为没有值
-有两种方法赋值
+有两种方法赋值 assign和initialize
 1.tf.assign()
+-----------
+
 tf.assign(target, value) 
 
 ```bash
@@ -99,3 +101,41 @@ print sess.run(count_variable)
 ```
 
 ![](https://github.com/ehamster/NLP/blob/master/images/assign.png)
+
+tf.assign特殊性
+1.不做运算
+2.副作用计算路径经过的时候副作用发生在其他节点，这里是用zero_node值替换count_variable的值
+3.非依赖边 count_variable and assign_node是独立的计算不会回流
+
+计算路径流到任何点时也会执行该节点的所有副作用，这里是count_variable内存被永远设置0
+下次再调用 sess.run(count_variable)不会报错而是得到0
+
+2 initialize
+-----------
+
+```bash
+import tensorflow as tf
+const_init_node = tf.constant_initializer(0.)
+count_variable = tf.get_variable("count", [], initializer=const_init_node)
+sess = tf.Session()
+print sess.run([count_variable])
+```
+v ...... const_init_node
+
+这里只是将两个节点关联，变量count_variable内存仍然是null，并没有得到值
+我们需要添加session使用const_init_node 更新变量的值
+
+```bash
+import tensorflow as tf
+const_init_node = tf.constant_initializer(0.)
+count_variable = tf.get_variable("count", [], initializer=const_init_node)
+init = tf.global_variables_initializer()
+sess = tf.Session()
+sess.run(init)
+print sess.run(count_variable)
+```
+![](https://github.com/ehamster/NLP/blob/master/images/initialize.png)
+
+
+
+
