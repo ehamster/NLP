@@ -1,5 +1,7 @@
 Thanks for Jacob Buckman's describe on https://jacobbuckman.com/post/tensorflow-the-confusing-parts-1/
 
+
+
 Whats Tensorflow
 ======================
 
@@ -136,6 +138,248 @@ print sess.run(count_variable)
 ```
 ![](https://github.com/ehamster/NLP/blob/master/images/initialize.png)
 
+添加了init = tf.global_variables_initializer()，当用session启动他时，所有initialize都会完成初始化赋值
+在深度学习中，典型的「内循环」训练如下：
+
+1. 获取输入和 true_output
+
+2. 根据输入和参数计算「推测」值
+
+3. 根据推测与 true_output 之间的差异计算「损失」
+
+4. 根据损失的梯度更新参数
+
+```python
+import tensorflow as tf
+
+### build the graph
+## first set up the parameters
+m = tf.get_variable("m", [], initializer=tf.constant_initializer(0.))
+b = tf.get_variable("b", [], initializer=tf.constant_initializer(0.))
+init = tf.global_variables_initializer()
+
+## then set up the computations
+input_placeholder = tf.placeholder(tf.float32)
+output_placeholder = tf.placeholder(tf.float32)
+
+x = input_placeholder
+y = output_placeholder
+y_guess = m * x + b
+
+loss = tf.square(y - y_guess)
+
+## finally, set up the optimizer and minimization node
+optimizer = tf.train.GradientDescentOptimizer(1e-3)
+train_op = optimizer.minimize(loss)
+
+### start the session
+sess = tf.Session()
+sess.run(init)
+
+### perform the training loop
+import random
+
+## set up problem
+true_m = random.random()
+true_b = random.random()
+
+for update_i in range(100000):
+  ## (1) get the input and output
+  input_data = random.random()
+  output_data = true_m * input_data + true_b
+
+  ## (2), (3), and (4) all take place within a single call to sess.run()!
+  _loss, _ = sess.run([loss, train_op], feed_dict={input_placeholder: input_data, output_placeholder: output_data})
+  print update_i, _loss
+
+### finally, print out the values we learned for our two variables
+print "True parameters:     m=%.4f, b=%.4f" % (true_m, true_b)
+print "Learned parameters:  m=%.4f, b=%.4f" % tuple(sess.run([m, b]))
+```
+
+optimizer = tf.train.GradientDescentOptimizer(1e-3)
+这一行没有添加节点，只是创建python对象
+train_op = optimizer.minimize(loss)
+这一行添加了train_op节点伴随复杂的副作用：
+train_op 回溯输入和损失的计算路径，寻找变量节点。对于它找到的每个变量节点，计算该变量对于损失的梯度。然后计算该变量的新值：
+当前值减去梯度乘以学习率的积。最后，它执行赋值操作更新变量的值。
+
+tf.Print
+-------------
+
+它有两个必需参数：要复制的节点和要打印的内容列表。他会输出input节点的copy同时，它的副作用是打印出「打印列表」里的所有当前值。
+
+```python
+import tensorflow as tf
+two_node = tf.constant(2)
+three_node = tf.constant(3)
+sum_node = two_node + three_node
+print_sum_node = tf.Print(sum_node, [two_node, three_node])
+sess = tf.Session()
+print sess.run(print_sum_node)
+```
+[2][3]
+5
+注意：如果print这个节点不在计算流，他是不会打印的，即使他复制的点在计算流
+最好在创建要复制的节点后，立即创建你的 tf.Print 节点。
+
+举个栗子
+-------
+
+```bash
+import tensorflow as tf
+two_node = tf.constant(2)
+three_node = tf.constant(3)
+sum_node = two_node + three_node
+### this new copy of two_node is not on the computation path, so nothing prints!
+print_two_node = tf.Print(two_node, [two_node, three_node, sum_node])
+sess = tf.Session()
+print sess.run(sum_node)
+```
+
+只会输出5，并没有 tf.Print(two_node, [two_node, three_node, sum_node]) 要打印的这些，因为
+tf.print节点不在sess.run(sum_node)计算流上，即使他复制的two_node在。
+
+![](https://github.com/ehamster/NLP/blob/master/images/tfprint.png)
+
+Inspecting Graphs
+==========
+
+使用 tf.get_default()_graph() 返回一个指针指向 default global graph object
+
+tf.Operation代表节点  tf.Tensor代表edge
+create a new node:
+1.我们收集与新节点的传入边相对应的所有tf.Tensor对象
+2.我们创建一个新节点，它是一个tf.Operation对象
+3.我们创建一个或多个新的传出边，它们是tf.Tensor对象，并返回指向它们的指针
+
+有时候把node和tensor混为一体了，其实有点区别。具体可以看看 https://jacobbuckman.com/post/graph-inspection/
+
+令人困惑的TF第二季！！
+=================
+
+https://jacobbuckman.com/post/tensorflow-the-confusing-parts-2/
+
+Naming and Scoping
+----------------
+
+```bash
+c = tf.constant(2., name="cool_const")
+d = tf.constant(3., name="cool_const")
+```
+cool_const:0 cool_const_1:0
+名字会默认不一样的
+
+Using Scope
+----------
+
+with tf.variable_scope(scope_name):
+可以给tensor分组
+
+```bash
+import tensorflow as tf
+a = tf.constant(0.)
+b = tf.constant(1.)
+with tf.variable_scope("first_scope"):
+  c = a + b
+  d = tf.constant(2., name="cool_const")
+  coef1 = tf.get_variable("coef", [], initializer=tf.constant_initializer(2.))
+  with tf.variable_scope("second_scope"):
+    e = coef1 * d
+```
+a.name = Const:0
+c.name = first_scope/add:0 
+e.name = first_scope/second_scope/mul:0
+
+Sasving And Loading
+---------------
+
+work with single model:
+
+ ```python
+import tensorflow as tf
+a = tf.get_variable('a', [])
+b = tf.get_variable('b', [])
+init = tf.global_variables_initializer()
+
+saver = tf.train.Saver()
+sess = tf.Session()
+sess.run(init)
+saver.save(sess, './tftcp.model')
+ ```
+最后产生四个文件
+checkpoint
+tftcp.model.data-00000-of-00001
+tftcp.model.index
+tftcp.model.meta
+
+tftcp.model.data-00000-of-00001 包含模型权重（上述第一个要点）。它可能这里最大的文件。
+tftcp.model.meta 是模型的网络结构（上述第二个要点）。它包含重建图形所需的所有信息。
+tftcp.model.index 是连接前两点的索引结构。用于在数据文件中找到对应节点的参数。
+checkpoint 实际上不需要重建模型，但如果在整个训练过程中保存了多个版本的模型，那它会跟踪所有内容。
+
+saver.save(sess, './tftcp.model')
+数值存在session中，所以要传入，
+
+saver只会保存之前创建的所有variable 如果要选择保存
+-----------------
+
+saver = tf.train.Saver(var_list=[a,b])
+
+Loading model
+------------
+
+```bash
+import tensorflow as tf
+a = tf.get_variable('a', [])
+b = tf.get_variable('b', [])
+
+saver = tf.train.Saver()
+sess = tf.Session()
+saver.restore(sess, './tftcp.model')
+sess.run([a,b])
+```
+不要初始化a b
 
 
+注意：
+1.模型保存了a b 读取的时候只有a没问题
+2.模型保存了a 读取的时候有变量a b 会报错
+3.模型保存了a 读取用的d 可以制定 a = d  saver = tf.train.Saver(var_list={'a': d})
 
+```bash
+import tensorflow as tf
+a = tf.get_variable('a', [])
+init = tf.global_variables_initializer()
+saver = tf.train.Saver()
+sess = tf.Session()
+sess.run(init)
+saver.save(sess, './tftcp.model')
+
+import tensorflow as tf
+d = tf.get_variable('d', [])
+init = tf.global_variables_initializer()
+saver = tf.train.Saver(var_list={'a': d})
+sess = tf.Session()
+sess.run(init)
+saver.restore(sess, './tftcp.model')
+sess.run(d)
+```
+
+模型检查
+-------------
+
+使用工具 https://github.com/tensorflow/tensorflow/blob/master/tensorflow/framework/python/framework/checkpoint_utils.py 
+
+```python
+import tensorflow as tf
+a = tf.get_variable('a', [])
+b = tf.get_variable('b', [10,20])
+c = tf.get_variable('c', [])
+init = tf.global_variables_initializer()
+saver = tf.train.Saver()
+sess = tf.Session()
+sess.run(init)
+saver.save(sess, './tftcp.model')
+print tf.contrib.framework.list_variables('./tftcp.model')
+```
