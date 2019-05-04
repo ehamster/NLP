@@ -2,6 +2,15 @@
 ================
 ![](https://github.com/ehamster/NLP/blob/master/images/conclusion.jpg)
 
+最大似然估计
+--------------
+
+就是使用一种方法估算出一件事情发生的概率，也就是那个参数
+比如：我们要求命中靶心的概率p = 0.5，但是我们只有实验结果并不知道这个值
+所以我们做三次实验，射10次，分别命中的次数是4，5，6
+要使连乘的值最大： p(4) * p(5) * p(6)   意味着要找到一个参数，使同时发生这三种情况的概率最大
+因为 事实就是因为p=0.5才 发生了这三件事，我们只要找到让连乘最大的参数，就是p的近似值
+
 监督学习的模型分为 判别式模型(discriminative model) 和生成式模型(generative model)
 ------------
 ```python
@@ -76,6 +85,9 @@
    HMM只考虑1gram，这就是他的弊端
    ```
    ![](https://github.com/ehamster/NLP/blob/master/images/Screenshot%202019-03-15%20at%2014.57.36.png)
+   
+   
+   
    
    3.CRF 条件随即场  conditional random field
    ------------------
