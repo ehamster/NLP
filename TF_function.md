@@ -10,10 +10,3 @@ exponential_decay(learning_rate, global_step, decay_steps, decay_rate, staircase
 
 
 
-
-
-
-
-
-
-<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
