@@ -1,2 +1,4 @@
 1.建立分区表时直接插入中文会有问题，可以使用txt插入数据
 load data local inpath '/home/wy/a.txt' into table tb_input partition(cp = 2, ld = 2);
+
+2.
