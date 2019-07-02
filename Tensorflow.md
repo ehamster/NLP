@@ -383,3 +383,38 @@ sess.run(init)
 saver.save(sess, './tftcp.model')
 print tf.contrib.framework.list_variables('./tftcp.model')
 ```
+
+
+
+常用函数
+----------------------
+
+```python
+1. tf.argmax(input, axis)
+axis = 0  得到每一列最大值下标
+axis = 1  得到每一行的
+
+2. tf.euqal(x,y)
+如果x,y是数组，返回[True,True,False]这样
+
+3.tf.cast(x,'float')
+转化格式
+[True,True,False]  变为[1.,1.,0.]
+
+4.tf.reduce_mean()
+求mean
+
+5.aaa.eval() 等价于 sess.run(aaa)
+
+aaa.eval()必须写在with Session() as sess: 里面
+with tf.Session() as sess:
+  print(accuracy.eval({x:mnist.test.images,y_: mnist.test.labels}))
+  
+#其效果和下面的代码是等价的
+
+with tf.Session() as sess:
+  print(sess.run(accuracy, {x:mnist.test.images,y_: mnist.test.labels}))
+#eval()只能用于tf.Tensor类对象，也就是有输出的Operation。对于没有输出的Operation, 可以用.run()或者Session.run()。Session.run()没有这个限制
+
+
+```
