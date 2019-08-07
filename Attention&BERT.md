@@ -23,3 +23,27 @@
 
 self-attention层计算过程
 ![](https://github.com/ehamster/NLP/blob/master/images/attention.png)
+
+
+
+```bash
+4.实际运行是以矩阵的形式跑
+5.多头注意力 multi-headed attention 机制，生成多个 q k v
+按照上面的过程，也会生成多个z  把多个z连接起来 * w0  得到一个最终的Z
+
+
+```
+
+![](https://github.com/ehamster/NLP/blob/master/images/multi.png)
+
+
+```bash
+6.为了记录位置信息，word embedding之后先加一个位移矩阵，且每一个子层周围都有一个归一化
+```
+
+![](https://github.com/ehamster/NLP/blob/master/images/%E7%BC%96%E7%A0%81%E5%99%A8.png)
+
+
+1.2解码器
+------------------
+
