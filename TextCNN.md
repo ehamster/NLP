@@ -1,7 +1,7 @@
 CNN for NLP
 ===================
 
-1.what is convolution
+1.What is convolution
 --------------------
 ```bash
 对于一个矩阵进行滑动的window function
@@ -20,20 +20,20 @@ CNN for NLP
 不够的地方添加0为 wide 不添加为narrow
 ```
 
-3.pooling
+3.Pooling
 ---------------
 ```bash
 一般是max poolling ,目的是获取固定size的输出，确实这样会丢失global info
 就是这几个词出现的位置，但是不会丢失ngram信息， 比如还是获取了 not amazing 和 amazing not 的区别
 ```
 
-4.channel 
+4.Channel 
 ---------
 ```bash
 类似于图片有RGB，nlp类似于有不同weight
 ```
 
-5.conclution
+5.Conclution
 -----------
 ```bash
 优秀：擅长文本分类，情例如感分析，垃圾邮件提取，主题分类
