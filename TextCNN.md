@@ -45,7 +45,8 @@ CNN for NLP
 3.pooling是max或者average
 4.激活函数relu或者tanh等
 等
-```
+
 
 [1] Blog:http://www.wildml.com/2015/12/implementing-a-cnn-for-text-classification-in-tensorflow/
 [2] Github: https://github.com/dennybritz/cnn-text-classification-tf
+```
