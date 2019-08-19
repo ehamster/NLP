@@ -6,7 +6,8 @@
   a)编码器不共享参数，结构一样。
     由两部分组成：self-attention 和feedforward网络
   b)解码器
-    由三部分组成：self-attention，编码解码注意力层 和feedforward网络
+    由三部分组成：self-attention，encoder-decoder attention 和feedforward网络
+  c)每一小层后面都加了残差网络的short cut结构，解决退化问题
     
     
 2.过程
@@ -44,9 +45,21 @@ self-attention层计算过程
 ![](https://github.com/ehamster/NLP/blob/master/images/%E7%BC%96%E7%A0%81%E5%99%A8.png)
 
 
+```bash
+7.得到z之后，送入FF网络，有两部分，relu和线性激活
+FFN(Z) = max(0,ZW1+b1)W2 + b2
+```
 1.2解码器
 ------------------
+1） self-attention
+和编码器类似
+2) encoder -decoder attention
+在解码器中，Transformer block比编码器中多了个encoder-cecoder attention。在encoder-decoder attention中， Q 来之与解码器的上一个输出， K和 
+V则来自于与编码器的输出。其计算方式完全和上面的图的过程相同。
 
+由于在机器翻译中，解码过程是一个顺序操作的过程，也就是当解码第k个特征向量时，我们只能看到第k-1及其之前的解码结果，论文中把这种情况下的multi-head attention叫做masked multi-head attention。
+
+3)损失层
 
 
 
