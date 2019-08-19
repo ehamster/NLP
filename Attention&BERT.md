@@ -47,3 +47,11 @@ self-attention层计算过程
 1.2解码器
 ------------------
 
+
+
+
+
+2.BERT
+=====================
+Bidirectional Encoder Representations from transformers
+
