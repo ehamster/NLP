@@ -410,6 +410,29 @@ aaa.eval()必须写在with Session() as sess: 里面
 with tf.Session() as sess:
   print(accuracy.eval({x:mnist.test.images,y_: mnist.test.labels}))
   
+6.tf.nn.conv2d(input, filter, strides, padding, use_cudnn_on_gpu=None, name=None)
+ input:[batch, in_height, in_width, in_channels] shape是这样的数据
+ 数量，高度，宽度，通道数
+ filter：filter_height, filter_width, in_channels, out_channels 
+ strides：卷积时在图像每一维的步长
+ padding:只能是"SAME","VALID"其中之一 SAME是可以超出边界补0
+ 后面两个不用管
+7.tf.nn.max_pool(value, ksize, strides, padding, name=None)
+ value：和上面input一样
+ ksize：池化窗口的大小，取一个四维向量，一般是[1, height, width, 1]，因为我们不想在batch和channels上做池化，所以这两个维度设为了1
+ strides：和卷积类似，窗口在每一个维度上滑动的步长，一般也是[1, stride,stride, 1]
+
+ 
+8.tf.nn.softmax_cross_entropy_with_logits(logits, labels, name=None)
+ 第一个参数logits：就是神经网络最后一层的输出，如果有batch的话，它的大小就是[batchsize，num_classes]，单样本的话，大小就是num_classes
+ 第二个参数labels：实际的标签，大小同上
+ 两个步骤： 1.输出的结果做softmax得到一个向量[Y1，Y2....Y10]
+  2.和实际的Y做一个交叉熵运算[0,0,1,0,0,0,0,0]  
+  结果越小越准确，因为H(y) = - sum(yi`log(yi))  yi`就是实际标签上第i个值，yi是预测第i个值
+  
+  如果是求loss，就不求sum而是求mean
+
+9.
 #其效果和下面的代码是等价的
 
 with tf.Session() as sess:
