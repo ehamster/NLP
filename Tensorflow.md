@@ -439,5 +439,14 @@ with tf.Session() as sess:
   print(sess.run(accuracy, {x:mnist.test.images,y_: mnist.test.labels}))
 #eval()只能用于tf.Tensor类对象，也就是有输出的Operation。对于没有输出的Operation, 可以用.run()或者Session.run()。Session.run()没有这个限制
 
+10.tensorflow.contrib.learn.preprocessing.VocabularyProcessor
 
+ Learn the vocabulary dictionary and return indexies of words
+eg: x=['I love u', 'I miss u']  得到 x=[[1 2 3] [1 4 3]] 
+
+用法：
+max_len= 3
+vocab_processor = learn.preprocessing.VocabularyProcessor(max_len)
+s = np.array(list(vocab_processor.fit_transform(x)))
+print(s)
 ```
