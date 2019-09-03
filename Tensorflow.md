@@ -449,4 +449,9 @@ max_len= 3
 vocab_processor = learn.preprocessing.VocabularyProcessor(max_len)
 s = np.array(list(vocab_processor.fit_transform(x)))
 print(s)
+
+10.tf.nn.embedding_lookup(param,ids,partition_strategy='mod', max_norm=None)
+param放的是weight ids放的就是单词index数组
+相当于通过index或者对应参数作为word_embedding
+
 ```
