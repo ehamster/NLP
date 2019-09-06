@@ -120,3 +120,37 @@
  4.
  ```
  
+ 注意力
+ =====================
+ 
+ 1.encoder -decoder框架
+ ----------------
+ ```bash
+ 注意力不一定需要依赖encoder decoder框架，他是一种思想
+ 1.如果没有注意力-
+ source(x1,x2,x3) -> target(y1,y2,y3)
+ 翻译 Tom Chase Jerry -> 汤姆 追逐 杰瑞
+ source的任意词对于生成target的词 yi 影响力是一样的，
+ y1 = f(C), y2 = f(C,y1) , y3 = f(C,y1y2) 他们的语义编码C都是一样的
+ f是Decoder的非线性变换函数
+ 
+ 2.有注意力
+ 但是其实杰瑞受jerry影响最大
+ y1 = f(C1)
+ y2 = f(C2,y1)
+ y3 = f(C3,y1,y2)
+ C汤姆 = g(0.6 * f2(Tom),0.2 * f2(Chase), 0.2* f2(Jerry))
+ C追逐 = g(0.2 * f2(Tom),0.7 * f2(Chase), 0.1* f2(Jerry))
+ C杰瑞 = g(0.3 * f2(Tom),0.2 * f2(Chase), 0.5* f2(Jerry))
+ f2函数代表Encoder对输入英文单词的某种变换函数
+ 比如如果Encoder是用的RNN模型的话，这个f2函数的结果往往是某个时刻输入xi后隐层节点的状态值
+ g代表Encoder根据单词的中间表示合成整个句子中间语义表示的变换函数，一般的做法中，g函数就是对构成元素加权求和
+ 
+ ```
+ 2.Attention实质
+ ------------------
+ ```bash
+ 将Source中的构成元素想象成是由一系列的<Key,Value>数据对构成，此时给定Target中的某个元素Query，通过计算Query和各个Key的相似性或者相关性，得到每个Key对应Value的权重系数，然后对Value进行加权求和，即得到了最终的Attention数值。所以本质上Attention机制是对Source中元素的Value值进行加权求和
+
+```
+![](https://github.com/ehamster/NLP/blob/master/images/attentions.png)
