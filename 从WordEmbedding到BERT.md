@@ -147,10 +147,29 @@
  g代表Encoder根据单词的中间表示合成整个句子中间语义表示的变换函数，一般的做法中，g函数就是对构成元素加权求和
  
  ```
- 2.Attention实质
+ 2.Attention实质（思想）
  ------------------
  ```bash
- 将Source中的构成元素想象成是由一系列的<Key,Value>数据对构成，此时给定Target中的某个元素Query，通过计算Query和各个Key的相似性或者相关性，得到每个Key对应Value的权重系数，然后对Value进行加权求和，即得到了最终的Attention数值。所以本质上Attention机制是对Source中元素的Value值进行加权求和
+ 将Source中的构成元素想象成是由一系列的<Key,Value>数据对构成，此时给定Target中的某个元素Query，通过计算Query和各个Key的相似性或者相关性
+ ，得到每个Key对应Value的权重系数，然后对Value进行加权求和，即得到了最终的Attention数值。
+ 所以本质上Attention机制是对Source中元素的Value值进行加权求和
 
+
+总结分3步:1.计算yi和每个x相似性
+         2.类softmax行为做个归一化得到权重 
+         3.每个x对应value的加权求和得到attention，进入f()得到yi
+         
+         其中1有很多方法，点积啊，cosine similarity啊之类的或者更牛逼的用额外神经网络
 ```
 ![](https://github.com/ehamster/NLP/blob/master/images/attentions.png)
+
+3.self attention
+-----------------
+
+上面说的attention是发生在target和source种，self-attention发生在source内部或者target内部的
+也可以说是source = target的情况下
+比如
+The law is important because it is useful
+it的attention在law上有很高的权重
+
+因为他是直接计算两个词之间相似度的，所以不像LSTM受到距离影响。
