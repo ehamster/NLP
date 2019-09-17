@@ -1,4 +1,4 @@
-1.Transfrom模型
+1.Transfromer模型
 ==================
 
 ```bash
