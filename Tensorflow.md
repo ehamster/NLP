@@ -454,4 +454,6 @@ print(s)
 param放的是weight ids放的就是单词index数组
 相当于通过index或者对应参数作为word_embedding
 
+11.tf.random_uniform() 
+
 ```
