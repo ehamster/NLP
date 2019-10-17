@@ -456,4 +456,45 @@ param放的是weight ids放的就是单词index数组
 
 11.tf.random_uniform() 
 
+12.learn.preprocessing.VocabularyProcessor(max_document_length)
+
+其中VocabularyProcessor（max_document_length,min_frequency=0,vocabulary=None, tokenizer_fn=None)的构造函数中有4个参数
+max_document_length是文档的最大长度。如果文本的长度大于最大长度，那么它会被剪切，反之则用0填充
+
+min_frequency词频的最小值，出现次数>最小词频 的词才会被收录到词表中
+
+vocabulary CategoricalVocabulary 对象，不太清楚使用方法
+tokenizer_fn tokenizer function，讲句子或给定文本格式 token化得函数，可以理解为分词函数
+
+vp = learn.preprocessing.VocabularyProcessor(10, tokenizer_fn=list)
+x = list(vp.fit_transform(["abc", "bbd"]))
+print(x)
+
+x : array[1,2,3,0,0,0,0,0,0,0] [2,2,4,0,0,0,0,0,0,0]
+
+13.tf.Variable(0,trainable=False)
+可以防止该变量被数据流图的 GraphKeys.TRAINABLE_VARIABLES 收集, 
+这样我们就不会在训练的时候尝试更新它的值
+
+
+14.tf.train.AdamOptimizer(1e-4)
+minimize函数其实就是调用了这两个方法
+所有优化器都有compute_gradients 方法和 apply_gradients方法
+e.g使用opt来最小化loss，这里相当于获得函数最低点
+import tensorflow as tf
+
+x = tf.Variable(10.0, trainable=True)
+f_x = 2 * x* x - 5 *x + 4
+
+loss = f_x
+opt = tf.train.GradientDescentOptimizer(0.1).minimize(f_x)
+
+with tf.Session() as sess:
+    sess.run(tf.global_variables_initializer())
+    for i in range(100):
+        print(sess.run([x,loss]))
+        sess.run(opt)
+
+
+15.tf.scalar_summary
 ```
