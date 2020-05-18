@@ -20,5 +20,11 @@ a.add_(1)
 b也变了，反过来也一样
 c = torch.from_numpy(b)
 
-6.
+6.tensor从cpu移动到gpu
+device = torch.device("cuda")
+x = x.to(device)
+y = torch.ones_like(x,device=device)
+z.to("cpu",torch.double)
+
+
 ```
