@@ -27,4 +27,5 @@ y = torch.ones_like(x,device=device)
 z.to("cpu",torch.double)
 
 
+7.
 ```
