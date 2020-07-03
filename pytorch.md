@@ -29,3 +29,21 @@ z.to("cpu",torch.double)
 
 7.
 ```
+2.模型的保存读取
+===================
+```bash
+1.save
+torch.save(model.state_dict(),PATH)
+
+state_dict()是一个dictionary
+conv1.weight     torch.Size([6, 3, 5, 5])
+conv1.bias   torch.Size([6])
+conv2.weight     torch.Size([16, 6, 5, 5])
+
+2.load
+
+model = TheModelClass(*args, **kwargs)
+model.load_state_dict(torch.load(PATH))
+model.eval()
+
+```
