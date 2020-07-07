@@ -48,3 +48,10 @@ model.eval()
 
 
 ```
+3.Torch Server
+====================
+
+```bash
+1.先使用torch-model-archiver  将模型的ckpt和state_dict打包成一个.mar文件
+
+```
